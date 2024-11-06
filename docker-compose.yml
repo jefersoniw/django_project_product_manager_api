@@ -10,7 +10,7 @@ services:
         - POSTGRES_DB=postgres
         - POSTGRES_USER=postgres
         - POSTGRES_PASSWORD=postgres
-# Cria o ambiente web utilizando o localhost na porta 8010
+# Cria o ambiente web utilizando o localhost na porta 8000
 # Também informa a pasta onde está o código do app
 # E adiciona a dependência do serviço db
   web_product_manager_api:
