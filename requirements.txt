@@ -1,0 +1,10 @@
+#Informa a versão do Django que será instalada.
+#Neste caso, maior que 3.0 e menor que 4.0
+Django>=3.0,<4.0
+psycopg2-binary>=2.8
+asgiref==3.5.2
+django-cors-headers==3.13.0
+djangorestframework==3.14.0
+pytz==2022.6
+sqlparse==0.4.3
+tzdata==2022.6
