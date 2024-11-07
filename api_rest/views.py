@@ -45,11 +45,46 @@ def getUserById(request, id):
 def createUser(request):
   if request.method == 'POST':
     
-    user = request.data 
-    serializer = UserSerializer(data=user)
+    try:
+      user = request.data 
+      serializer = UserSerializer(data=user)
+      
+      if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    except:
+      return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+  
+@api_view(['PUT'])
+def updateUser(request, id):
+    
+  if request.method == 'PUT':         
+    try:
+      user = User.objects.get(pk=id)
+    except:
+      return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = UserSerializer(user, data=request.data)
+    print(serializer.is_valid())
     
     if serializer.is_valid():
       serializer.save()
-      return Response(serializer.data, status=status.HTTP_201_CREATED)
+      return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
     
     return Response(status=status.HTTP_400_BAD_REQUEST)
+  
+@api_view(['DELETE'])
+def deleteUser(request, id):
+  
+  if request.method == 'DELETE':
+    try: 
+      user = User.objects.get(pk=id)
+    except:
+      return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    user.delete()
+    return Response('User Deleted!', status=status.HTTP_202_ACCEPTED)
+    
+  return Response(status=status.HTTP_400_BAD_REQUEST) 
