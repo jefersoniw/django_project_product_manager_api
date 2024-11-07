@@ -21,7 +21,7 @@ class User(Base):
     verbose_name_plural = 'Users'
   
   def __str__(self):
-    return f'Name: {self.name} | Email: {self.email}'
+    return f'Name: {self.name}'
   
 #model Client
 class Client(Base):  

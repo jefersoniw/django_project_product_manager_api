@@ -7,7 +7,7 @@ from .models import Product
 class UserSerializer(serializers.ModelSerializer):
   class Meta:
     model = User
-    fields = ['id', 'name', 'email', 'created_at', 'updated_at']
+    fields = '__all__'
 
 class ClientSerializer(serializers.ModelSerializer):
   class Meta:
