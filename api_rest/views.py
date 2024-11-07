@@ -19,7 +19,7 @@ from .serializers import ProductSerializer
 
 import json
 
-
+#USERS
 @api_view(['GET'])
 def getUsers(request):
   if request.method == 'GET':
@@ -28,14 +28,14 @@ def getUsers(request):
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data)
   
-  return Response(status=status.HTTP_400_BAD_REQUEST)
+  return Response('Erro!', status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def getUserById(request, id):
   try:
     user = User.objects.get(pk=id)
   except:
-    return Response(status=status.HTTP_404_NOT_FOUND)
+    return Response('Not Found!', status=status.HTTP_404_NOT_FOUND)
   
   if request.method == 'GET':    
     serializer = UserSerializer(user)
@@ -45,11 +45,116 @@ def getUserById(request, id):
 def createUser(request):
   if request.method == 'POST':
     
-    user = request.data 
-    serializer = UserSerializer(data=user)
+    try: 
+      serializer = UserSerializer(data=request.data)
+      
+      if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    except:
+      return Response('Erro!', status=status.HTTP_400_BAD_REQUEST)
+    
+    return Response('Erro!', status=status.HTTP_400_BAD_REQUEST)
+  
+@api_view(['PUT'])
+def updateUser(request, id):
+    
+  if request.method == 'PUT':         
+    try:
+      user = User.objects.get(pk=id)
+    except:
+      return Response('Not Found!', status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = UserSerializer(user, data=request.data)
     
     if serializer.is_valid():
       serializer.save()
-      return Response(serializer.data, status=status.HTTP_201_CREATED)
+      return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
     
-    return Response(status=status.HTTP_400_BAD_REQUEST)
+    return Response('Erro!', status=status.HTTP_400_BAD_REQUEST)
+  
+@api_view(['DELETE'])
+def deleteUser(request, id):
+  
+  if request.method == 'DELETE':
+    try: 
+      user = User.objects.get(pk=id)
+    except:
+      return Response('Not Found!', status=status.HTTP_404_NOT_FOUND)
+    
+    user.delete()
+    return Response('User Deleted!', status=status.HTTP_202_ACCEPTED)
+    
+  return Response('Erro!', status=status.HTTP_400_BAD_REQUEST) 
+
+#CLIENTS
+@api_view(['GET'])
+def getClients(request):
+  if request.method == 'GET':
+    
+    clients = Client.objects.all()
+    
+    serializer = ClientSerializer(clients, many=True)
+    return Response(serializer.data)
+  
+  return Response('Erro!', status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def getClient(request, id):
+  if request.method == 'GET':
+    
+    try:
+      client = Client.objects.get(pk=id)
+    except:
+      return Response('Not found!', status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = ClientSerializer(client)
+    return Response(serializer.data)
+  
+  return Response('Erro!', status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def createClient(request):
+  if request.method == 'POST':
+    
+    serializer = ClientSerializer(data=request.data)
+    try:
+      if serializer.is_valid():
+          serializer.save()
+          return Response(serializer.data, status=status.HTTP_201_CREATED)
+    except:
+      return Response('Erro!', status=status.HTTP_400_BAD_REQUEST)
+    
+  return Response('Erro!', status=status.HTTP_400_BAD_REQUEST) 
+
+@api_view(['PUT'])
+def updateClient(request, id):
+  if request.method == 'PUT':
+    
+    try:
+      client = Client.objects.get(pk=id)
+    except:
+      return Response('Not found!', status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = ClientSerializer(client, data=request.data)
+    
+    if serializer.is_valid():
+      serializer.save()
+      return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+
+  return Response('Erro!', status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['DELETE'])
+def deleteClient(request, id):
+  if request.method == 'DELETE':
+    
+    try:
+      client = Client.objects.get(pk=id)
+    except:
+      return Response('Not found!', status=status.HTTP_404_NOT_FOUND)
+    
+    client.delete()
+    return Response('Client Deleted!', status=status.HTTP_202_ACCEPTED)
+    
+  return Response('Erro!', status=status.HTTP_400_BAD_REQUEST) 
+    
