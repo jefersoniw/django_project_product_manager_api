@@ -158,3 +158,74 @@ def deleteClient(request, id):
     
   return Response('Erro!', status=status.HTTP_400_BAD_REQUEST) 
     
+# PRODUCTS
+@api_view(['GET'])
+def getProducts(request):
+  if request.method == 'GET':
+    
+    products = Product.objects.all()
+    
+    serializer = ProductSerializer(products, many=True)
+    return Response(serializer.data)
+  
+  return Response('Erro!', status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def getProduct(request, id):
+  if request.method == 'GET':
+    
+    try:
+      product = Product.objects.get(pk=id)
+    except:
+      return Response('Not found!', status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = ProductSerializer(product)
+    return Response(serializer.data)
+  
+  return Response('Erro!', status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def createProduct(request):
+  if request.method == 'POST':
+    
+    serializer = ProductSerializer(data=request.data)
+    try:
+      if serializer.is_valid():
+          serializer.save()
+          return Response(serializer.data, status=status.HTTP_201_CREATED)
+    except:
+      return Response('Erro!', status=status.HTTP_400_BAD_REQUEST)
+    
+  return Response('Erro!', status=status.HTTP_400_BAD_REQUEST) 
+
+@api_view(['PUT'])
+def updateProduct(request, id):
+  if request.method == 'PUT':
+        
+    try:
+      product = Product.objects.get(pk=id)
+    except:
+      return Response('Not found!', status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = ProductSerializer(product, data=request.data)
+    
+    print(serializer.is_valid())
+    if serializer.is_valid():
+      serializer.save()
+      return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+
+  return Response('Erro!', status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['DELETE'])
+def deleteProduct(request, id):
+  if request.method == 'DELETE':
+    
+    try:
+      product = Product.objects.get(pk=id)
+    except:
+      return Response('Not found!', status=status.HTTP_404_NOT_FOUND)
+    
+    product.delete()
+    return Response('Product Deleted!', status=status.HTTP_202_ACCEPTED)
+    
+  return Response('Erro!', status=status.HTTP_400_BAD_REQUEST) 
