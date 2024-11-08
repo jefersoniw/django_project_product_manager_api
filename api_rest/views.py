@@ -201,14 +201,15 @@ def createProduct(request):
 @api_view(['PUT'])
 def updateProduct(request, id):
   if request.method == 'PUT':
-    
+        
     try:
       product = Product.objects.get(pk=id)
     except:
       return Response('Not found!', status=status.HTTP_404_NOT_FOUND)
     
-    serializer = ProductSerializer(client, data=request.data)
+    serializer = ProductSerializer(product, data=request.data)
     
+    print(serializer.is_valid())
     if serializer.is_valid():
       serializer.save()
       return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
